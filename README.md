@@ -28,7 +28,7 @@ Node Auth Rest API is an open-source authentication RESTful API built with Node.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/node-auth-rest-api.git
+   git clone https://github.com/wEbCoAdEr/NodeAuthRestAPI
    ```
 2.  Navigate to the project directory:
        ```bash
