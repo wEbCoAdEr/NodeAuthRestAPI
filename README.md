@@ -32,7 +32,7 @@ Node Auth Rest API is an open-source authentication RESTful API built with Node.
    ```
 2.  Navigate to the project directory:
        ```bash
-    cd node-auth-rest-api
+    cd NodeAuthRestAPI
     ```
     
 3.  Install the dependencies:
