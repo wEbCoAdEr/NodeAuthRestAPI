@@ -1,26 +1,35 @@
 /**
- * Error handling middleware.
+ * Middleware for handling errors in an Express.js application.
  *
- * This middleware function handles errors that occur during request processing.
- * It logs the error and sends an appropriate error response with the corresponding status code and error message.
- *
- * @param {Error} err - The error object.
- * @param {Request} req - The HTTP request object.
- * @param {Response} res - The HTTP response object.
- * @param {function} next - The next middleware function.
- * @returns {void}
+ * @param {Error} err - The error object passed by Express.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The callback to pass control to the next middleware.
  */
 const errorHandler = (err, req, res, next) => {
+    // Check if an error object exists
+    if (err) {
+        // Log the error to the console
+        console.error(`NEW ERROR CAUGHT: ${err}`);
 
-    console.log(`NEW ERROR CAUGHT: ${err}`);
+        // Determine the status code for the response or use a default of 500 (Internal Server Error)
+        const statusCode = err.statusCode || 500;
 
-    const statusCode = err.statusCode || 500;
-    const errorMessage = err.message || 'An Error Occurred';
+        // Get the error message from the error object or use a default message
+        const errorMessage = err.message || "An Error Occurred";
 
-    res.status(statusCode).json({
-        message: errorMessage
-    });
+        // Send a JSON response with the error message and status code
+        res.status(statusCode).json({
+            message: errorMessage,
+        });
 
-}
+        // Exit the middleware to prevent further processing
+        return;
+    }
 
+    // If there is no error, pass control to the next middleware
+    next();
+};
+
+// Export the errorHandler middleware for use in the Express application
 module.exports = errorHandler;
