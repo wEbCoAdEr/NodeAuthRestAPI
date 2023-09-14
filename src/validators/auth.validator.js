@@ -28,7 +28,7 @@ const validateSchema = (schema, req, res, next) => {
     if (error) {
         // If there are validation errors, return the errors with 400 Bad Request status
         const errorMessage = error.details.map((err) => err.message);
-        return res.status(httpStatus.BAD_REQUEST).json({ errors: errorMessage });
+        return res.status(httpStatus.BAD_REQUEST).json({ message: errorMessage });
     }
     next();
 }
