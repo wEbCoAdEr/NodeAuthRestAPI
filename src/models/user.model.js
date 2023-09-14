@@ -35,7 +35,8 @@ userSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
         try {
-            user.password = await bcrypt.hash(user.password, config.HASH_SALT_ROUND);
+            const salt = bcrypt.genSaltSync(Number(config.HASH_SALT_ROUND));
+            user.password = bcrypt.hashSync(user.password, salt);
         } catch (error) {
             next(error);
         }
