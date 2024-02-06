@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the Refresh Token schema
 const refreshTokenSchema = new mongoose.Schema({
   user: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
@@ -14,6 +14,10 @@ const refreshTokenSchema = new mongoose.Schema({
   },
   ip: {
     type: String,
+    required: true
+  },
+  expires: {
+    type: Date, // Store expiration time as a Date object
     required: true
   }
 }, { timestamps: true });

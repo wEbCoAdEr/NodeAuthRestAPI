@@ -8,15 +8,18 @@ const http = require('http');
 let server = http.createServer(app);
 
 // Connect to the database
-mongoose.connect(config.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+mongoose.connect(config.DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
 
-    console.log("Connected to the database");
+  console.log("Connected to the database");
 
-    // Start HTTP web server
-    server.listen(config.APP_PORT, () => {
-        console.log(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
-    });
+  // Start HTTP web server
+  server.listen(config.APP_PORT, () => {
+    console.log(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
+  });
 
 }).catch((err) => {
-    console.error('Failed to connect to the database', err);
+  console.error('Failed to connect to the database', err);
 });

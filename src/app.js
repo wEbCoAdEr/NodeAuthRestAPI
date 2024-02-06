@@ -2,10 +2,10 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const compression = require('compression');
+const config = require('./config');
 const { errorHandler } = require('./middlewares');
-
-// Import routers
-const authRouter = require('./routes/auth.route');
+const router = require('./routes/v1');
 
 // Initiate express app
 const app = express();
@@ -19,8 +19,14 @@ app.use(cors());
 // Parse JSON request body
 app.use(express.json());
 
+// Parse URL-encoded request body
+app.use(express.urlencoded({ extended: true }));
+
+// Compress response bodies for all requests
+app.use(compression());
+
 // Define routers
-app.use('/auth', authRouter);
+app.use(config.API_ENPOINT_PREFIX, router);
 
 // Register the error handling middleware
 app.use(errorHandler);

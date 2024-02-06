@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const { authValidator } = require('../validators');
-const { authService, userService } = require('../services');
+const { authService, userService, tokenService } = require('../services');
 const { authUser } = require('../middlewares');
 
 
@@ -59,14 +59,14 @@ const register = [
  *
  * @param {Request} req - The HTTP request object.
  * @param {Response} res - The HTTP response object.
- * @returns {Response} The HTTP response containing the generated tokens or an error message.
+ * @returns {Response} The HTTP response containing the generated tokens and user data or an error message.
  */
 const login = [
     authValidator.validateLogin,
     catchAsync(async (req, res) => {
         const { username, password } = req.body;
-        const tokenData = await authService.login(username, password, req.ip);
-        return res.json(tokenData);
+        const loginData = await authService.login(username, password, req.ip);
+        return res.json(loginData);
     })
 ];
 
@@ -104,7 +104,7 @@ const token = catchAsync(async (req, res) => {
         const userId = tokenObject.userId;
 
         //Process database token validation
-        const checkRefreshToken = await authService.checkToken({
+        const checkRefreshToken = await tokenService.checkToken({
             user: userId,
             token: refreshToken
         });
@@ -116,8 +116,10 @@ const token = catchAsync(async (req, res) => {
         }
 
         //Generate access token
-        const accessToken = authService.generateAccessToken({
-            userId: userId
+        const accessToken = tokenService.generateToken({
+            userId: userId,
+            userRole: tokenObject.userRole,
+            userIP: tokenObject.userIP
         });
 
         //Send response with new generated access token
@@ -142,7 +144,7 @@ const token = catchAsync(async (req, res) => {
  * @returns {Response} The HTTP response indicating the success or failure of the logout operation.
  */
 const logout = [
-    authUser,
+    authUser(),
     catchAsync(async (req, res) => {
 
         const refreshToken = req.body.refreshToken;
@@ -152,7 +154,6 @@ const logout = [
                 message: 'Unauthorized user request'
             });
         }
-
 
         jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET, async (error, tokenObject) => {
 
@@ -179,7 +180,6 @@ const logout = [
             }
 
         });
-
     })
 ];
 

@@ -24,6 +24,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         minlength: 8,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'], // User role can be 'user' or 'admin'
+        default: 'user' // Default role is 'user'
     }
 }, {
     timestamps: true,
@@ -38,10 +43,10 @@ userSchema.pre('save', async function (next) {
             const salt = bcrypt.genSaltSync(Number(config.HASH_SALT_ROUND));
             user.password = bcrypt.hashSync(user.password, salt);
         } catch (error) {
-            next(error);
+            next(error);  // Pass any errors to the next middleware
         }
     }
-    next();
+    next(); // Continue to the next middleware
 });
 
 // Initiate User model

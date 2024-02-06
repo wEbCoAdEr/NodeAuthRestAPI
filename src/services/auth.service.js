@@ -1,28 +1,7 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config');
-const { User, RefreshToken } = require('../models');
+const {User, RefreshToken} = require('../models');
+const { tokenService } = require('../services');
 
-/**
- * Checks if a refresh token exists in the database.
- * @param {Object} queryObject - Query object to find the refresh token.
- * @returns {Promise<boolean>} A boolean indicating if the refresh token exists.
- */
-const checkToken = async (queryObject) => {
-    const token = await RefreshToken.findOne(queryObject);
-    return !!token;
-};
-
-/**
- * Generates an access token.
- * @param {Object} tokenData - Data to be included in the access token.
- * @returns {string} The generated access token.
- */
-const generateAccessToken = (tokenData) => {
-    return jwt.sign(tokenData, config.ACCESS_TOKEN_SECRET, {
-        expiresIn: config.ACCESS_TOKEN_EXPIRATION,
-    });
-};
 
 /**
  * Handles user login process.
@@ -34,42 +13,38 @@ const generateAccessToken = (tokenData) => {
  */
 const login = async (username, password, ip) => {
 
-    // Verify user username
-    const user = await User.findOne({ username });
-    if (!user) {
-        throw new Error('Invalid username entered');
-    }
+  // Verify user username
+  const user = await User.findOne({username});
+  if (!user) {
+    throw new Error('Invalid username entered');
+  }
 
-    // Verify user password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-        throw new Error('Invalid password entered');
-    }
+  // Verify user password
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
+    throw new Error('Invalid password entered');
+  }
 
-    // Generate JWT Access Token
-    const tokenData = {
-        userId: user._id
-    };
-    const accessToken = generateAccessToken(tokenData);
+  // Initiate auth token object
+  const tokenData = {
+    userId: user._id,
+    userRole: user.role,
+    userIP: ip
+  };
 
-    // Generate JWT Refresh Token
-    const refreshToken = jwt.sign(tokenData, config.REFRESH_TOKEN_SECRET);
+  const authToken = await tokenService.generateAuthToken(tokenData);
 
-    // Store the refresh token to the database
-    RefreshToken.create({
-        user: user._id,
-        token: refreshToken,
-        ip: ip
-    });
+  //Generate user object and remove unnecessary properties
+  const userObject = user.toObject();
+  delete userObject.__v;
+  delete userObject.password;
 
-    return {
-        user: user,
-        token: {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        }
-    };
+  return {
+    user: userObject,
+    token: authToken
+  };
 };
+
 
 /**
  * Handles user logout process.
@@ -77,15 +52,14 @@ const login = async (username, password, ip) => {
  * @returns {Promise<boolean>} A boolean indicating if the logout was successful.
  */
 const logout = async (refreshToken) => {
-    try {
-        await RefreshToken.findOneAndDelete({
-            token: refreshToken
-        });
-        return true;
-    } catch (err) {
-        console.log(`LOGOUT ERROR: ${err}`);
-        return false;
-    }
+  try {
+    await RefreshToken.findOneAndDelete({
+      token: refreshToken
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
 
-module.exports = { login, checkToken, generateAccessToken, logout };
+module.exports = {login, logout};

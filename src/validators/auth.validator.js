@@ -7,6 +7,7 @@ const registerSchema = joi.object({
     username: joi.string().required().label('Username'),
     email: joi.string().email().required().label('Email'),
     password: joi.string().min(8).required().label('Password'),
+    role: joi.string().label('Role')
 });
 
 // Validation schema for the login route
