@@ -1,3 +1,9 @@
+/**
+ * Module for defining the Refresh Token schema and creating the RefreshToken model.
+ * @module refreshTokenModel
+ */
+
+// Load required dependencies
 const mongoose = require('mongoose');
 
 // Define the Refresh Token schema
@@ -25,4 +31,4 @@ const refreshTokenSchema = new mongoose.Schema({
 // Create the RefreshToken model
 const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
 
-module.exports = RefreshToken;
+module.exports = RefreshToken; // Export the RefreshToken model
