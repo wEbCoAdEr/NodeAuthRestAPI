@@ -1,3 +1,4 @@
+const { logger } = require('../utils');
 /**
  * Middleware for handling errors in an Express.js application.
  *
@@ -10,7 +11,7 @@ const errorHandler = (err, req, res, next) => {
     // Check if an error object exists
     if (err) {
         // Log the error to the console
-        console.error(`NEW ERROR CAUGHT: ${err}`);
+        logger.error(err.message);
 
         // Determine the status code for the response or use a default of 500 (Internal Server Error)
         const statusCode = err.statusCode || 500;

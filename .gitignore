@@ -56,3 +56,6 @@ coverage/
 *.swf
 *.as
 *.asc
+
+# Ignore package-lock.json file
+package-lock.json

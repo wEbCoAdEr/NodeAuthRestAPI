@@ -1,8 +1,9 @@
 // Loads required dependencies
-const config = require('./config');
-const app = require('./app');
 const mongoose = require('mongoose');
 const http = require('http');
+const config = require('./config');
+const app = require('./app');
+const { logger } = require('./utils');
 
 // Initiate server instance
 let server = http.createServer(app);
@@ -13,11 +14,11 @@ mongoose.connect(config.DB_URI, {
   useUnifiedTopology: true
 }).then(() => {
 
-  console.log("Connected to the database");
+  logger.info("Connected to MongoDB Database");
 
   // Start HTTP web server
   server.listen(config.APP_PORT, () => {
-    console.log(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
+    logger.info(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
   });
 
 }).catch((err) => {
