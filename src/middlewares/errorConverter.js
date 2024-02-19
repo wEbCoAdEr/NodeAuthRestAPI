@@ -21,7 +21,7 @@ const errorConverter = (err, req, res, next) => {
       error = new ApiError(statusCode, message, err.stack);
     }
     // Pass the error to the next middleware
-    next(err);
+    next(error);
   }
   // Call the next middleware
   next();
