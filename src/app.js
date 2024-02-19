@@ -4,8 +4,8 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const config = require('./config');
-const initializeSentry = require('./utils/sentry.util');
-const { errorHandler } = require('./middlewares');
+const initializeSentry = require('./utils/sentry');
+const { errorConverter, errorHandler } = require('./middlewares');
 const router = require('./routes/v1');
 
 // Initiate express app
@@ -40,6 +40,9 @@ app.use(config.API_ENPOINT_PREFIX, router);
 
 // Sentry error handler
 app.use(sentry.Handlers.errorHandler());
+
+// Convert standard errors to ApiError if necessary
+app.use(errorConverter);
 
 // Register the error handling middleware
 app.use(errorHandler);

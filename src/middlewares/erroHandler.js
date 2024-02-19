@@ -1,4 +1,7 @@
-const { logger } = require('../utils');
+const httpStatus = require('http-status');
+const {logger} = require('../utils');
+const config = require('../config');
+
 /**
  * Middleware for handling errors in an Express.js application.
  *
@@ -8,28 +11,30 @@ const { logger } = require('../utils');
  * @param {Function} next - The callback to pass control to the next middleware.
  */
 const errorHandler = (err, req, res, next) => {
-    // Check if an error object exists
-    if (err) {
-        // Log the error to the console
-        logger.error(err.message);
+  // Check if an error object exists
+  if (err) {
 
-        // Determine the status code for the response or use a default of 500 (Internal Server Error)
-        const statusCode = err.statusCode || 500;
+    //Extract properties from the error object
+    let {statusCode, message, stack} = err;
 
-        // Get the error message from the error object or use a default message
-        const errorMessage = err.message || "An Error Occurred";
+    // Set the status code if not set by the API Error class
+    statusCode = statusCode || httpStatus.INTERNAL_SERVER_ERROR;
 
-        // Send a JSON response with the error message and status code
-        res.status(statusCode).json({
-            message: errorMessage,
-        });
+    //Construct the error response
+    const errorResponse = {
+      message,
+      ...(config.ENV === 'DEVELOPMENT' && {stack}),
+    };
 
-        // Exit the middleware to prevent further processing
-        return;
-    }
+    // Log the error to the console
+    logger.error(err.message);
 
-    // If there is no error, pass control to the next middleware
-    next();
+    // Send the error response
+    res.status(statusCode).send(errorResponse);
+  }
+
+  // If there is no error, pass control to the next middleware
+  next();
 };
 
 // Export the errorHandler middleware for use in the Express application
