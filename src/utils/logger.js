@@ -7,8 +7,8 @@
 // Import required dependencies
 const winston = require('winston');
 require('winston-daily-rotate-file');
-const {Console, DailyRotateFile} = winston.transports;
-const {combine, timestamp, json, cli} = winston.format;
+const {Console, File, DailyRotateFile} = winston.transports;
+const {combine, timestamp, json, cli, errors} = winston.format;
 const config = require("../config");
 
 // Define common transports for both development and production environment
@@ -45,8 +45,14 @@ const loggerTransports = [...commonTransports, ...environmentTransport];
 // Create logger instance
 const logger = winston.createLogger({
   level: config.ENV === 'DEVELOPMENT' ? 'debug' : 'info', // Set logging level based on environment
-  format: combine(timestamp(), json()), // Log format including timestamp and JSON format
-  transports: loggerTransports // Assign transports based on environment
+  format: combine(errors({stack: true}), timestamp(), json()), // Log format including timestamp and JSON format
+  transports: loggerTransports, // Assign transports based on environment
+  exceptionHandlers: [
+    new File({
+      dirname: config.LOG_PATH,
+      filename: 'exceptions.log'
+    })
+  ]
 });
 
 module.exports = logger;

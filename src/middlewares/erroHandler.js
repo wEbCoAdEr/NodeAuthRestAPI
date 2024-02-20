@@ -27,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
     };
 
     // Log the error to the console
-    logger.error(err.message);
+    logger.error(err);
 
     // Send the error response
     res.status(statusCode).send(errorResponse);

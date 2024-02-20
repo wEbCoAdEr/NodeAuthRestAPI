@@ -21,6 +21,6 @@ mongoose.connect(config.DB_URI, {
     logger.info(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
   });
 
-}).catch((err) => {
-  console.error('Failed to connect to the database', err);
+}).catch((error) => {
+  logger.error(error);
 });
