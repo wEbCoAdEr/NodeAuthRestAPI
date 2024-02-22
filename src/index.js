@@ -18,7 +18,7 @@ mongoose.connect(config.DB_URI, {
 
   // Start HTTP web server
   server.listen(config.APP_PORT, () => {
-    logger.info(`Server is listening on port http://127.0.0.1:${config.APP_PORT}`);
+    logger.info(`Server is listening on http://127.0.0.1:${config.APP_PORT}`);
   });
 
 }).catch((error) => {

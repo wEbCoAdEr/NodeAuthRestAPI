@@ -4,8 +4,8 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const config = require('./config');
-const initializeSentry = require('./utils/sentry');
-const { errorConverter, errorHandler } = require('./middlewares');
+const { initializeSentry } = require('./utils');
+const { httpLogger, errorConverter, errorHandler } = require('./middlewares');
 const router = require('./routes/v1');
 
 // Initiate express app
@@ -19,6 +19,9 @@ app.use(sentry.Handlers.requestHandler());
 
 // TracingHandler creates a trace for every incoming request
 app.use(sentry.Handlers.tracingHandler());
+
+// HTTP request logger middleware using morgan
+app.use(httpLogger);
 
 // Set HTTP security headers
 app.use(helmet());
