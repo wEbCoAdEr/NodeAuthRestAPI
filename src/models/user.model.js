@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
+const {paginate} = require("./plugins");
 
 // Define user schema
 const userSchema = mongoose.Schema({
@@ -48,6 +49,9 @@ userSchema.pre('save', async function (next) {
     }
     next(); // Continue to the next middleware
 });
+
+// Add paginate plugin
+userSchema.plugin(paginate);
 
 // Initiate User model
 const User = mongoose.model("User", userSchema);

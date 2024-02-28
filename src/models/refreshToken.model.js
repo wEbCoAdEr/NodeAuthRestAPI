@@ -5,6 +5,7 @@
 
 // Load required dependencies
 const mongoose = require('mongoose');
+const {paginate} = require("./plugins");
 
 // Define the Refresh Token schema
 const refreshTokenSchema = new mongoose.Schema({
@@ -27,6 +28,9 @@ const refreshTokenSchema = new mongoose.Schema({
     required: true
   }
 }, { timestamps: true });
+
+// Add paginate plugin
+refreshTokenSchema.plugin(paginate);
 
 // Create the RefreshToken model
 const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
