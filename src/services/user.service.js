@@ -19,4 +19,14 @@ const createUser = async (requestBody) => {
     return User.create(requestBody);
 };
 
-module.exports = { checkRecord, createUser };
+const getUsers = async (query, options) => {
+    return User.paginate(query, options);
+}
+
+const getUserById = async (id) => {
+    return User.findById(id);
+}
+
+module.exports = {
+    checkRecord, createUser, getUsers, getUserById
+};

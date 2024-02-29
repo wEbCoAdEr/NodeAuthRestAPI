@@ -8,6 +8,10 @@ const routes = [
     {
         path: "/auth",
         handler: require("./auth.route")
+    },
+    {
+        path: "/users",
+        handler: require("./users.route")
     }
 ];
 
