@@ -1,18 +1,18 @@
+const { dbHelper } = require('../../helpers');
+
 /**
  * Adds pagination functionality to Mongoose schema.
  * @param {mongoose.Schema} schema - Mongoose schema to which pagination will be added.
  */
 const paginate = (schema) => {
   /**
-   * Custom paginate method added to the schema's statics.
-   * @param {Object} filter - Query conditions.
+   * Adds pagination functionality to the schema's statics.
+   * @param {Object} filter - Query filter.
    * @param {Object} options - Pagination options.
    * @param {number} options.page - Current page number.
    * @param {number} options.limit - Maximum number of documents per page.
-   * @param {Array} options.populate - Array of fields to populate.
-   * @param {Array} options.sortBy - Array of sort criteria.
-   * @param {string} options.sortBy[].field - Field to sort by.
-   * @param {string} options.sortBy[].order - Sort order ('asc' for ascending, 'desc' for descending).
+   * @param {string} options.sortBy - Sort criteria (e.g., 'createdAt:desc').
+   * @param {string|null} options.populate - Comma-separated list of fields to populate.
    * @param {Function} callback - Callback function to handle pagination result.
    * @returns {Promise<Object>} - Pagination result.
    */
@@ -22,19 +22,11 @@ const paginate = (schema) => {
       page = 1, limit = 10, sortBy = 'createdAt:desc', populate = null
     } = options;
 
-    // Generate document skip value
+    // Calculate document skip value
     const skip = (page - 1) * limit;
 
     // Generate sort query
-    let sortQuery = '';
-    let sortList = [];
-    sortBy.split(',').forEach((sortItem) => {
-      let sortItemArray = sortItem.split(':');
-      if(Number(sortItemArray.length) === 2) {
-        sortList.push((sortItemArray[1] === 'desc' ? '-' : '') + sortItemArray[0]);
-      }
-    });
-    sortQuery = sortList.join(' ');
+    const sortQuery = dbHelper.generateSortQuery(sortBy);
 
     // Initiate count and document promise
     const countPromise = this.countDocuments(filter).exec();
@@ -59,12 +51,15 @@ const paginate = (schema) => {
     // Wait for count and document promises to resolve
     const [count, documents] = await Promise.all([countPromise, docsPromise]);
 
+    // Calculate total pages
+    const pages = Math.ceil(count / limit);
+
     // Calculate pagination metadata
     const result = {
       count,
+      pages,
       page,
       limit,
-      totalPages: Math.ceil(count / limit),
       data: documents
     };
 
