@@ -28,7 +28,8 @@ const transporter = nodemailer.createTransport({
  * @param {string} mailConfig.subject - Email subject.
  * @param {string} mailConfig.bodyType - Type of email body (e.g., 'text' or 'html').
  * @param {string} mailConfig.body - Email body content.
- * @returns {Promise<Object>} A promise that resolves to the information about the sent email.
+ * @returns {Promise<boolean|Object>} A promise that resolves to false if sending email fails,
+ * or resolves to an object containing information about the sent email.
  */
 const send = async (mailConfig) => {
 
