@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
- * Send email using Nodemailer transporter.
+ * Asynchronously sends an email using the Nodemailer transporter.
  * @param {Object} mailConfig - Email configuration object.
  * @param {string} mailConfig.fromName - Sender's name.
  * @param {string} mailConfig.fromAddress - Sender's email address.
@@ -28,7 +28,7 @@ const transporter = nodemailer.createTransport({
  * @param {string} mailConfig.subject - Email subject.
  * @param {string} mailConfig.bodyType - Type of email body (e.g., 'text' or 'html').
  * @param {string} mailConfig.body - Email body content.
- * @returns {Promise} - Promise resolving to the sent email object.
+ * @returns {Promise<Object>} A promise that resolves to the information about the sent email.
  */
 const send = async (mailConfig) => {
 
@@ -37,13 +37,18 @@ const send = async (mailConfig) => {
   const from = `${fromName} <${fromAddress}>`;
   const to = toList.join(',');
 
-  // Send email using Nodemailer transporter
-  const mail = await transporter.sendMail({
-    from, to, subject, [bodyType]: body
-  });
-
-  logger.info(`Email sent: ${mail.messageId}`);
-  return mail;
+  try {
+    // Send email using Nodemailer transporter
+    const info = await transporter.sendMail({
+      from, to, subject, [bodyType]: body
+    });
+    logger.info(`Email sent: ${info.messageId}`);
+    return info;
+  } catch (err) {
+    logger.error('Error sending email:', err);
+    return false;
+  }
 }
 
-module.exports = { transporter, send };
+
+module.exports = {transporter, send};
