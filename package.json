@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
     "helmet": "^7.0.0",
     "http-status": "^1.7.3",
     "joi": "^17.9.2",

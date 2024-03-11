@@ -4,12 +4,15 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const config = require('./config');
-const { initializeSentry } = require('./utils');
-const { httpLogger, errorConverter, errorHandler } = require('./middlewares');
+const {initializeHandlebars, initializeSentry} = require('./utils');
+const {httpLogger, errorConverter, errorHandler} = require('./middlewares');
 const router = require('./routes/v1');
 
 // Initiate express app
 const app = express();
+
+// Initialize and configure view engine
+initializeHandlebars(app);
 
 // Initialize Sentry with express app instance
 const sentry = initializeSentry(app);
@@ -33,10 +36,13 @@ app.use(cors());
 app.use(express.json());
 
 // Parse URL-encoded request body
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 // Compress response bodies for all requests
 app.use(compression());
+
+// Handle root endpoint request
+app.get('/', (req, res) => res.render('home'));
 
 // Define routers
 app.use(config.API_ENPOINT_PREFIX, router);
