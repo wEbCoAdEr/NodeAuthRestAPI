@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const {User, RefreshToken} = require('../models');
-const { tokenService } = require('../services');
-
+const {tokenService} = require('../services');
+const {mailer} = require('../utils');
 
 /**
  * Handles user login process.
@@ -62,4 +62,22 @@ const logout = async (refreshToken) => {
   }
 };
 
-module.exports = {login, logout};
+const requestPasswordReset = async (userData) => {
+
+  const {email} = userData;
+
+  const sendEmail = await mailer.send({
+    toList: [email],
+    subject: 'Password Reset Request',
+    template: 'passwordReset',
+    templateData: userData
+  });
+
+  if (!sendEmail) {
+    return false;
+  }
+
+  return true;
+}
+
+module.exports = {login, logout, requestPasswordReset};

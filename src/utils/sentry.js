@@ -18,9 +18,9 @@ const initializeSentry = (app) => {
     dsn: config.SENTRY_DSN, // Sentry DSN for error reporting
     integrations: [
       // Enable HTTP calls tracing
-      new sentry.Integrations.Http({ tracing: true }),
+      new sentry.Integrations.Http({tracing: true}),
       // Enable Express.js middleware tracing
-      new sentry.Integrations.Express({ app }),
+      new sentry.Integrations.Express({app}),
     ],
     // Configure performance monitoring
     tracesSampleRate: 1.0, // Capture 100% of the transactions

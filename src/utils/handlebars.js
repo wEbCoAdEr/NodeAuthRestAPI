@@ -12,12 +12,14 @@ const path = require('path');
  * @param {Object} app - The Express app instance.
  */
 const initializeHandlebars = (app) => {
+
   // Configure Express Handlebars
-  app.engine('hbs', engine({extname: '.hbs'}));
   app.set('view engine', 'hbs');
+  app.engine('hbs', engine({extname: '.hbs'}));
 
   // Set views directory
   app.set('views', path.join(__dirname, '../views'));
+
 };
 
 // Export the initializeHandlebars function

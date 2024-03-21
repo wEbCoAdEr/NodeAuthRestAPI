@@ -27,6 +27,10 @@ const getUserById = async (id) => {
     return User.findById(id);
 }
 
+const getUser = async (query) => {
+    return User.findOne(query);
+}
+
 module.exports = {
-    checkRecord, createUser, getUsers, getUserById
+    checkRecord, createUser, getUsers, getUserById, getUser
 };
