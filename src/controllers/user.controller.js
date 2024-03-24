@@ -5,7 +5,7 @@
 
 // Loads dependencies
 const httpStatus = require('http-status');
-const catchAsync = require('../utils/catchAsync');
+const {catchAsync} = require('../utils');
 const { userService } = require('../services');
 const { pick } = require('../helpers');
 

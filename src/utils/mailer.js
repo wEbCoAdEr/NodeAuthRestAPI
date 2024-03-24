@@ -61,6 +61,7 @@ const send = async (mailConfig) => {
     });
     logger.info(`Email sent: ${info.messageId}`);
     return info;
+
   } catch (err) {
     logger.error('Error sending email: ', err);
     return false;

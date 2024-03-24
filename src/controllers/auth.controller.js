@@ -1,6 +1,6 @@
 //Loads dependency
 const httpStatus = require('http-status');
-const catchAsync = require('../utils/catchAsync');
+const {catchAsync, ApiError} = require('../utils');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const {authValidator} = require('../validators');
@@ -195,7 +195,7 @@ const requestPasswordReset = [
       });
     }
 
-    const response = await authService.requestPasswordReset(userData);
+    const response = await authService.requestPasswordReset({username: userData.username, email});
 
     if (!response) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({

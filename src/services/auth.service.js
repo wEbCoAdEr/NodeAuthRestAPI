@@ -64,7 +64,7 @@ const logout = async (refreshToken) => {
 
 const requestPasswordReset = async (userData) => {
 
-  const {email} = userData;
+  const {email, username} = userData;
 
   const sendEmail = await mailer.send({
     toList: [email],
