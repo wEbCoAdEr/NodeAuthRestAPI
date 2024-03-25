@@ -44,6 +44,9 @@ app.use(compression());
 // Handle root endpoint request
 app.get('/', (req, res) => res.render('home'));
 
+// Serve static files from the "public" directory
+app.use(config.STATIC_SERVING_ENDPOINT, express.static('public'));
+
 // Define routers
 app.use(config.API_ENPOINT_PREFIX, router);
 
