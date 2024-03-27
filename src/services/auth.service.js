@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
-const {User, RefreshToken} = require('../models');
+const moment = require('moment');
+const {User, RefreshToken, PasswordResetToken} = require('../models');
 const {tokenService} = require('../services');
 const {mailer} = require('../utils');
+const config = require('../config');
 
 /**
  * Handles user login process.
@@ -64,20 +66,43 @@ const logout = async (refreshToken) => {
 
 const requestPasswordReset = async (userData) => {
 
-  const {email, username} = userData;
+  const {_id, email, role, ip, username} = userData;
+
+  const verificationCode = tokenService.generateVerificationCode();
+
+  //process token generation and database insert
+  const passwordResetTokenExpires = moment().add(config.PASSWORD_RESET_TOKEN_EXPIRATION, 'minutes').toDate();
+  const passwordResetToken = tokenService.generateToken({
+    userId: _id,
+    userRole: role,
+    userIP: ip
+  }, 'passwordResetToken');
 
   const sendEmail = await mailer.send({
     toList: [email],
     subject: 'Password Reset Request',
     template: 'passwordReset',
-    templateData: userData
+    templateData: {
+      username,
+      verificationCode
+    }
   });
 
   if (!sendEmail) {
     return false;
   }
 
-  return true;
+  // Delete previous reset token records of the user if any
+  await PasswordResetToken.deleteMany({user: _id});
+
+  return PasswordResetToken.create({
+    user: _id,
+    verificationCode,
+    token: passwordResetToken,
+    ip,
+    expires: passwordResetTokenExpires
+  });
+
 }
 
 module.exports = {login, logout, requestPasswordReset};

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const crypto = require('crypto');
 const config = require('../config');
 const { RefreshToken } = require('../models');
 
@@ -16,13 +17,27 @@ const checkToken = async (queryObject) => {
 /**
  * Generates a JWT token based on the provided data.
  * @param {Object} tokenData - Data to be included in the token.
- * @param {string} [type='access'] - Type of token to generate (either 'accessToken' or 'refreshToken').
+ * @param {string} [type='access'] - Type of token to generate (either 'accessToken', 'passwordResetToken' or 'refreshToken').
  * @returns {string} Generated JWT token.
  */
 const generateToken = (tokenData, type = 'accessToken') => {
 
-  const secret = type === 'accessToken' ? config.ACCESS_TOKEN_SECRET : config.REFRESH_TOKEN_SECRET;
-  const expires = type === 'accessToken' ? config.ACCESS_TOKEN_EXPIRATION : config.REFRESH_TOKEN_EXPIRATION;
+  let secret;
+  let expires;
+
+  switch (type) {
+    case 'refreshToken':
+      secret = config.REFRESH_TOKEN_SECRET;
+      expires = config.REFRESH_TOKEN_EXPIRATION;
+      break;
+    case 'accessToken':
+      secret = config.ACCESS_TOKEN_SECRET;
+      expires = config.ACCESS_TOKEN_EXPIRATION;
+      break;
+    default:
+      secret = config.PASSWORD_RESET_TOKEN_SECRET;
+      expires = config.PASSWORD_RESET_TOKEN_EXPIRATION;
+  }
 
   return jwt.sign(tokenData, secret, {
     expiresIn: expires + 'm',
@@ -68,8 +83,19 @@ const generateAuthToken = async (tokenData) => {
   };
 };
 
+/**
+ * Generates a verification token as a 6-digit string.
+ *
+ * @return {string} The generated verification token
+ */
+const generateVerificationCode = () => {
+  return crypto.randomInt(100000, 999999 + 1)
+    .toString().padStart(6, '0');
+}
+
 module.exports = {
   checkToken,
   generateToken,
-  generateAuthToken
+  generateAuthToken,
+  generateVerificationCode
 };

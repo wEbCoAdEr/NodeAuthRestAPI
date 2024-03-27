@@ -187,7 +187,7 @@ const requestPasswordReset = [
   catchAsync(async (req, res) => {
 
     const {email} = req.body;
-    const userData = await userService.getUser({email});
+    let userData = await userService.getUser({email});
 
     if (!userData) {
       return res.status(httpStatus.NOT_FOUND).json({
@@ -195,7 +195,10 @@ const requestPasswordReset = [
       });
     }
 
-    const response = await authService.requestPasswordReset({username: userData.username, email});
+    userData = userData.toObject();
+    userData.ip = req.ip;
+
+    const response = await authService.requestPasswordReset(userData);
 
     if (!response) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
