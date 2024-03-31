@@ -1,11 +1,12 @@
 //Loads dependency
 const httpStatus = require('http-status');
-const {catchAsync, ApiError} = require('../utils');
 const jwt = require('jsonwebtoken');
+const {catchAsync, ApiError} = require('../utils');
 const config = require('../config');
 const {authValidator} = require('../validators');
 const {authService, userService, tokenService} = require('../services');
 const {authUser} = require('../middlewares');
+
 
 /**
  * User registration API handler.
@@ -182,34 +183,110 @@ const logout = [
 ];
 
 
-const requestPasswordReset = [
-  authValidator.validatePasswordReset,
-  catchAsync(async (req, res) => {
+/**
+ * Handles the request to reset the password for a user.
+ *
+ * This method validates the password reset request, checks if the email address exists in the database,
+ * associates the IP address with the user data, and sends a password reset request to the authentication service.
+ * It returns an appropriate response indicating the success or failure of the password reset request.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @returns {Response} The HTTP response indicating the success or failure of the password reset request.
+ */
+const requestPasswordReset = catchAsync(async (req, res) => {
+  // Extract email from request body
+  const {email} = req.body;
 
-    const {email} = req.body;
-    let userData = await userService.getUser({email});
+  // Find user data based on the provided email
+  let userData = await userService.getUser({email});
 
-    if (!userData) {
-      return res.status(httpStatus.NOT_FOUND).json({
-        message: "Your provided emails address could not be found"
-      });
-    }
+  // If user data not found, return 404 response
+  if (!userData) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: "Your provided email address could not be found"
+    });
+  }
 
-    userData = userData.toObject();
-    userData.ip = req.ip;
+  // Convert user data to plain object and add IP address
+  userData = userData.toObject();
+  userData.ip = req.ip;
 
-    const response = await authService.requestPasswordReset(userData);
+  // Request password reset for the user
+  const response = await authService.requestPasswordReset(userData);
 
-    if (!response) {
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-        message: "Failed to process password reset request"
-      });
-    }
+  // If password reset request fails, throw internal server error
+  if (!response) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to process password reset request'
+    );
+  }
 
-    return res.status(httpStatus.ACCEPTED).json(response);
+  // Return successful response with accepted status
+  return res.status(httpStatus.ACCEPTED).json({
+    message: 'Password reset request initiated successfully! Please check your email for the verification code.'
+  });
+});
 
-  })
-];
 
+/**
+ * Get Password Reset Token API handler.
+ *
+ * This method handles the request to retrieve the password reset token
+ * based on the provided verification code. It fetches the reset token data
+ * using the verification code, verifies the token, and returns the password
+ * reset token if it's valid.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @returns {Response} The HTTP response containing the password reset token
+ *                      if the verification is successful, otherwise returns
+ *                      an error response.
+ */
+const getPasswordResetToken = catchAsync(async (req, res) => {
 
-module.exports = {register, login, token, logout, requestPasswordReset}
+  // Extract verification code from request body
+  const {verificationCode} = req.params;
+
+  // Fetch reset token data using the verification code
+  const tokenData = await tokenService.getPasswordResetToken({verificationCode});
+
+  // If token data not found, return 400 response
+  if (!tokenData) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: "Invalid password reset verification code"
+    });
+  }
+
+  const {token} = tokenData;
+
+  // Verify password reset token
+  const tokenVerified = await tokenService.verifyToken(token, 'passwordResetToken');
+
+  // If token verification fails, return 401 response
+  if (!tokenVerified) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      message: "Password reset token expired. Please initiate new password reset request."
+    });
+  }
+
+  // Return successful response with password reset token
+  return res.json({
+    passwordResetToken: token
+  });
+
+});
+
+const processPasswordReset = catchAsync(async (req, res) => {
+
+});
+
+module.exports = {
+  register,
+  login,
+  token,
+  logout,
+  requestPasswordReset,
+  getPasswordResetToken
+}

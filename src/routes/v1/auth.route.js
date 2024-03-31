@@ -1,4 +1,4 @@
-const { router, authController } = require('../../controllers');
+const {router, authController} = require('../../controllers');
 
 // Route for user registration
 router.post('/register', authController.register);
@@ -14,6 +14,9 @@ router.post('/logout', authController.logout);
 
 // Route for password reset request
 router.post('/reset-password', authController.requestPasswordReset);
+
+// Route for validating password reset verification code
+router.get('/reset-password/:verificationCode', authController.getPasswordResetToken);
 
 // Route for password reset confirmation
 //router.post('/reset-password/confirm', authController.confirmPasswordReset);
