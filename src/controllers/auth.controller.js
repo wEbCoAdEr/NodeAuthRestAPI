@@ -5,7 +5,8 @@ const {catchAsync, ApiError} = require('../utils');
 const config = require('../config');
 const {authValidator} = require('../validators');
 const {authService, userService, tokenService} = require('../services');
-const {authUser} = require('../middlewares');
+const {authHelper, coreHelper} = require('../helpers');
+const {authUser, authToken} = require('../middlewares');
 
 
 /**
@@ -278,9 +279,40 @@ const getPasswordResetToken = catchAsync(async (req, res) => {
 
 });
 
-const processPasswordReset = catchAsync(async (req, res) => {
 
-});
+/**
+ * Process Password Reset Request.
+ *
+ * This method handles the request to update the user's password after successful
+ * verification of the password reset token. It validates the password update,
+ * updates the user's password in the database, and returns a response indicating
+ * the success of the password update operation.
+ *
+ * @param {Request} req - The HTTP request object containing the user's new password.
+ * @param {Response} res - The HTTP response object for sending the password update status.
+ * @returns {Response} The HTTP response indicating the success of the password update operation.
+ */
+const processPasswordReset = [
+  authToken('passwordResetToken', authHelper.setRequestUserId),
+  authValidator.validatePasswordUpdate,
+  catchAsync(async (req, res) => {
+
+    // Extract the new password from the request body
+    const {password} = req.body;
+
+    // Update the user's password in the database
+    await userService.updateUserById(req.userId, {
+      password: coreHelper.hashString(password)
+    });
+
+    // Return a success response indicating the password update
+    return res.status(httpStatus.OK).json({
+      message: 'Account password updated successfully'
+    });
+
+  })
+];
+
 
 module.exports = {
   register,
@@ -288,5 +320,6 @@ module.exports = {
   token,
   logout,
   requestPasswordReset,
-  getPasswordResetToken
+  getPasswordResetToken,
+  processPasswordReset
 }

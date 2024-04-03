@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { validateSchema } = require('./index');
+const {validateSchema} = require('./index');
 
 // Validation schema for the register route
 const registerSchema = joi.object({
@@ -19,6 +19,14 @@ const loginSchema = joi.object({
 // Validate schema for password reset route
 const passwordResetSchema = joi.object({
   email: joi.string().email().required().label('Email')
+});
+
+// Validate schema for password update
+const passwordUpdateSchema = joi.object({
+  password: joi.string().min(8).required().label('Password'),
+  confirmPassword: joi.string().min(8).required().label('Confirm Password').valid(joi.ref('password')).messages({
+    'any.only': 'Passwords do not match'
+  })
 })
 
 /**
@@ -53,6 +61,16 @@ const validatePasswordReset = (req, res, next) => {
   validateSchema(passwordResetSchema, req, res, next);
 }
 
+/**
+ * Validate the password update request.
+ *
+ * @param {object} req - The request object
+ * @param {object} res - The response object
+ * @param {function} next - The next middleware function
+ */
+const validatePasswordUpdate = (req, res, next) => {
+  validateSchema(passwordUpdateSchema, req, res, next);
+}
 module.exports = {
-  validateRegister, validateLogin, validatePasswordReset
+  validateRegister, validateLogin, validatePasswordReset, validatePasswordUpdate
 };

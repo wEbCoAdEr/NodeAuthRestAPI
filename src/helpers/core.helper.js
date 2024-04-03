@@ -1,3 +1,5 @@
+const bcrypt = require("bcryptjs");
+const config = require("../config");
 /**
  * Picks specified properties from an object and returns a new object containing only those properties.
  * @param {Object} object - The object from which properties will be picked.
@@ -21,6 +23,19 @@ const pick = (object, keys) => {
   return pickedObject;
 };
 
+
+/**
+ * Generates a hashed version of the input string using bcrypt.
+ *
+ * @param {string} string - The string to be hashed.
+ * @return {string} The hashed version of the input string.
+ */
+const hashString = (string) => {
+  const salt = bcrypt.genSaltSync(Number(config.HASH_SALT_ROUND));
+  return bcrypt.hashSync(string, salt);
+}
+
 module.exports = {
-  pick
+  pick,
+  hashString
 }

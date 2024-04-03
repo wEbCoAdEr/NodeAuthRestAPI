@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 const {paginate} = require("./plugins");
+const {coreHelper} = require("../helpers");
 
 // Define user schema
 const userSchema = mongoose.Schema({
@@ -40,13 +41,13 @@ const userSchema = mongoose.Schema({
   }
 });
 
+
 // Hash user password before saving to the database
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     try {
-      const salt = bcrypt.genSaltSync(Number(config.HASH_SALT_ROUND));
-      user.password = bcrypt.hashSync(user.password, salt);
+      user.password = coreHelper.hashString(user.password);
     } catch (error) {
       next(error);  // Pass any errors to the next middleware
     }

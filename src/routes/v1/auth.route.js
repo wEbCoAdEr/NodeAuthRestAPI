@@ -15,10 +15,11 @@ router.post('/logout', authController.logout);
 // Route for password reset request
 router.post('/reset-password', authController.requestPasswordReset);
 
-// Route for validating password reset verification code
+// Route for getting password reset token
 router.get('/reset-password/:verificationCode', authController.getPasswordResetToken);
 
-// Route for password reset confirmation
-//router.post('/reset-password/confirm', authController.confirmPasswordReset);
+// Route for processing password reset
+router.put('/reset-password', authController.processPasswordReset);
+
 
 module.exports = router;
