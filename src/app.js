@@ -5,11 +5,14 @@ const cors = require('cors');
 const compression = require('compression');
 const config = require('./config');
 const {initializeHandlebars, initializeSentry} = require('./utils');
-const {httpLogger, errorConverter, errorHandler} = require('./middlewares');
+const {rateLimiter, httpLogger, errorConverter, errorHandler} = require('./middlewares');
 const router = require('./routes/v1');
 
 // Initiate express app
 const app = express();
+
+// Initialize rate limiter
+app.use(rateLimiter);
 
 // Initialize and configure view engine
 initializeHandlebars(app);
