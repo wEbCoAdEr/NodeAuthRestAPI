@@ -16,6 +16,8 @@
   "author": "wEbCoAdEr",
   "license": "MIT",
   "dependencies": {
+    "@logtail/node": "^0.4.21",
+    "@logtail/winston": "^0.4.21",
     "@sentry/node": "^7.100.0",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",

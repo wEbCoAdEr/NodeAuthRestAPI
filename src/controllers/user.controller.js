@@ -7,7 +7,7 @@
 const httpStatus = require('http-status');
 const {catchAsync} = require('../utils');
 const { userService } = require('../services');
-const { pick } = require('../helpers');
+const { coreHelper } = require('../helpers');
 
 /**
  * Get users based on provided query parameters.
@@ -17,8 +17,8 @@ const { pick } = require('../helpers');
  */
 const getUsers = catchAsync(async (req, res) => {
   // Extract filter and options from query parameters
-  const filter = pick(req.query, ['name', 'username', 'email', 'role']);
-  const options = pick(req.query, ['page', 'limit', 'sortBy', 'populate']);
+  const filter = coreHelper.pick(req.query, ['name', 'username', 'email', 'role']);
+  const options = coreHelper.pick(req.query, ['page', 'limit', 'sortBy', 'populate']);
 
   // Call userService to get users based on filter and options
   const users = await userService.getUsers(filter, options);
@@ -39,9 +39,11 @@ const getUserById = catchAsync(async (req, res) => {
 
   // Call userService to get user by ID
   const user = await userService.getUserById(id);
+  const userObject = user.toObject();
+  delete userObject.password;
 
   // Send response with user data
-  return res.status(httpStatus.OK).json(user);
+  return res.status(httpStatus.OK).json(userObject);
 });
 
 // Export controller methods
