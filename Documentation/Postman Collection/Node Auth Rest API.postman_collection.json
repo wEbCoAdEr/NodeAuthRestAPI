@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "cc35b14d-0398-4e9a-8b4d-6eeec1c657cd",
 		"name": "Node Auth Rest API",
+		"description": "The **nodeAuthRestAPI** Postman collection contains a set of endpoints for implementing authentication and user management functionalities. This collection is designed to facilitate testing, development, and integration of the backend services.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "17281179"
 	},
@@ -38,7 +39,8 @@
 										"auth",
 										"reset-password"
 									]
-								}
+								},
+								"description": "The **Request Password Reset** **API** allows users to initiate a password reset request by providing their registered email address."
 							},
 							"response": [
 								{
@@ -56,11 +58,15 @@
 											}
 										},
 										"url": {
-											"raw": "{{API_HOST}}/auth/reset-password",
+											"raw": "http://localhost:5050/api/v1/auth/reset-password",
+											"protocol": "http",
 											"host": [
-												"{{API_HOST}}"
+												"localhost"
 											],
+											"port": "5050",
 											"path": [
+												"api",
+												"v1",
 												"auth",
 												"reset-password"
 											]
@@ -181,7 +187,8 @@
 											"description": "Password reset verification code\n"
 										}
 									]
-								}
+								},
+								"description": "The **Get Password Reset Token API** allows users to verify a password reset request using a verification code and obtain a password reset token for further processing."
 							},
 							"response": [
 								{
@@ -199,11 +206,15 @@
 											}
 										},
 										"url": {
-											"raw": "{{API_HOST}}/auth/reset-password/verify",
+											"raw": "http://localhost:5050/api/v1/auth/reset-password/verify",
+											"protocol": "http",
 											"host": [
-												"{{API_HOST}}"
+												"localhost"
 											],
+											"port": "5050",
 											"path": [
+												"api",
+												"v1",
 												"auth",
 												"reset-password",
 												"verify"
@@ -561,7 +572,8 @@
 										"auth",
 										"reset-password"
 									]
-								}
+								},
+								"description": "The **Reset Password API** allows users to securely update their account password after successfully verifying the password reset token."
 							},
 							"response": [
 								{
@@ -579,11 +591,15 @@
 											}
 										},
 										"url": {
-											"raw": "{{API_HOST}}/auth/reset-password",
+											"raw": "http://localhost:5050/api/v1/auth/reset-password",
+											"protocol": "http",
 											"host": [
-												"{{API_HOST}}"
+												"localhost"
 											],
+											"port": "5050",
 											"path": [
+												"api",
+												"v1",
 												"auth",
 												"reset-password"
 											]
@@ -905,7 +921,8 @@
 								}
 							]
 						}
-					]
+					],
+					"description": "The **Password Reset** API consists of three endpoints that enable users to reset their passwords securely."
 				},
 				{
 					"name": "Register",
@@ -914,7 +931,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Rohsin Al Razi\",\n  \"username\": \"razi\",\n  \"email\": \"alrazi900@gmail.com\",\n  \"password\": \"Password20\",\n  \"role\": \"user\"\n}",
+							"raw": "{\n  \"name\": \"Jubaer Al Noman\",\n  \"username\": \"noman\",\n  \"email\": \"noman900@gmail.com\",\n  \"password\": \"Password20\",\n  \"role\": \"user\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -930,7 +947,8 @@
 								"auth",
 								"register"
 							]
-						}
+						},
+						"description": "The **Register** **API** allows secure user creation with validation. Successful registration returns user details."
 					},
 					"response": [
 						{
@@ -948,11 +966,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_HOST}}/auth/register",
+									"raw": "http://localhost:5050/api/v1/auth/register",
+									"protocol": "http",
 									"host": [
-										"{{API_HOST}}"
+										"localhost"
 									],
+									"port": "5050",
 									"path": [
+										"api",
+										"v1",
 										"auth",
 										"register"
 									]
@@ -1067,7 +1089,8 @@
 								"auth",
 								"login"
 							]
-						}
+						},
+						"description": "The **Login** **API** allows users to authenticate and obtain access to protected resources by providing valid credentials."
 					},
 					"response": [
 						{
@@ -1077,7 +1100,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"webcoader\",\n  \"password\": \"Password20\"\n}",
+									"raw": "{\n  \"username\": \"razi\",\n  \"password\": \"newPassword950\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1085,11 +1108,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_HOST}}/auth/login",
+									"raw": "http://localhost:5050/api/v1/auth/login",
+									"protocol": "http",
 									"host": [
-										"{{API_HOST}}"
+										"localhost"
 									],
+									"port": "5050",
 									"path": [
+										"api",
+										"v1",
 										"auth",
 										"login"
 									]
@@ -1099,6 +1126,30 @@
 							"code": 200,
 							"_postman_previewlanguage": "json",
 							"header": [
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Apr 2024 08:53:24 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1713430465"
+								},
+								{
+									"key": "RateLimit-Policy",
+									"value": "10;w=60"
+								},
+								{
+									"key": "RateLimit",
+									"value": "limit=10, remaining=9, reset=60"
+								},
 								{
 									"key": "Content-Security-Policy",
 									"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
@@ -1157,15 +1208,15 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "365"
+									"value": "786"
 								},
 								{
 									"key": "ETag",
-									"value": "W/\"16d-nxm0tfD+UowxaI5k8wnjZrZcCX8\""
+									"value": "W/\"312-CCNn9xUH9dY2YTPxf3WYQX474/E\""
 								},
 								{
-									"key": "Date",
-									"value": "Fri, 23 Jun 2023 17:29:27 GMT"
+									"key": "Vary",
+									"value": "Accept-Encoding"
 								},
 								{
 									"key": "Connection",
@@ -1177,7 +1228,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDk1Y2NiZTdmNGRhYWYxNTFkN2Q1YmEiLCJpYXQiOjE2ODc1NDEzNjcsImV4cCI6MTY4NzU0MzE2N30.FIUlD99j_9gy4jhlIqeNtDim1xecEHA9HMwP2m9SDLM\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDk1Y2NiZTdmNGRhYWYxNTFkN2Q1YmEiLCJpYXQiOjE2ODc1NDEzNjd9.Hsm32iRSnYNoygd30HPnblGyr9kJOm2d5JjTNIxgwq8\"\n}"
+							"body": "{\n    \"user\": {\n        \"_id\": \"65c219680abf647f49cd5044\",\n        \"name\": \"Rohsin Al Razi\",\n        \"username\": \"razi\",\n        \"email\": \"alrazi900@gmail.com\",\n        \"role\": \"user\",\n        \"createdAt\": \"2024-02-06T11:35:04.813Z\",\n        \"updatedAt\": \"2024-04-03T04:53:20.227Z\"\n    },\n    \"token\": {\n        \"accessToken\": {\n            \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMTk2ODBhYmY2NDdmNDljZDUwNDQiLCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VySVAiOiI6OjEiLCJpYXQiOjE3MTM0MzA0MDQsImV4cCI6MTcxMzQzMTAwNH0.TodRhM4mDwJ12XQq7yb5G2B6OG9vlQKpe70GA-RVwN8\",\n            \"expires\": \"2024-04-18T09:03:24.440Z\"\n        },\n        \"refreshToken\": {\n            \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMTk2ODBhYmY2NDdmNDljZDUwNDQiLCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VySVAiOiI6OjEiLCJpYXQiOjE3MTM0MzA0MDQsImV4cCI6MTcxNDI5NDQwNH0.g_sLGbVmi9OjynJz_GfUZ6mng-2xH3GVmLQgmeM3yFs\",\n            \"expires\": \"2024-04-28T08:53:24.440Z\"\n        }\n    }\n}"
 						}
 					]
 				},
@@ -1188,7 +1239,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refreshToken\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMTk2ODBhYmY2NDdmNDljZDUwNDQiLCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VySVAiOiI6OjEiLCJpYXQiOjE3MDcyMjAzMzksImV4cCI6MTcwODA4NDMzOX0.elAcbhYJjTmMlDkYrvVzakwQ_mXVLbKBjFvt6-H_imA\"\n}",
+							"raw": "{\n    \"refreshToken\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWMyMTk2ODBhYmY2NDdmNDljZDUwNDQiLCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VySVAiOiI6OjEiLCJpYXQiOjE3MTIxMjAwNjQsImV4cCI6MTcxMjk4NDA2NH0.JUZ0cOGsci2IuuRvCSv5s3h219_nXdHtsFJeS_eRdO4\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1204,7 +1255,8 @@
 								"auth",
 								"token"
 							]
-						}
+						},
+						"description": "The **Access Token** **API** allows users to obtain a new access token using a valid refresh token."
 					},
 					"response": [
 						{
@@ -1222,11 +1274,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_HOST}}/auth/token",
+									"raw": "http://localhost:5050/api/v1/auth/token",
+									"protocol": "http",
 									"host": [
-										"{{API_HOST}}"
+										"localhost"
 									],
+									"port": "5050",
 									"path": [
+										"api",
+										"v1",
 										"auth",
 										"token"
 									]
@@ -1351,7 +1407,8 @@
 								"auth",
 								"logout"
 							]
-						}
+						},
+						"description": "The **Logout** **API** allows users to invalidate their session and perform a secure logout by providing a refresh token."
 					},
 					"response": [
 						{
@@ -1369,11 +1426,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{API_HOST}}/auth/logout",
+									"raw": "http://localhost:5050/api/v1/auth/logout",
+									"protocol": "http",
 									"host": [
-										"{{API_HOST}}"
+										"localhost"
 									],
+									"port": "5050",
 									"path": [
+										"api",
+										"v1",
 										"auth",
 										"logout"
 									]
@@ -1457,7 +1518,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "The **Authentication API Collection** provide endpoints for user registration, login, access token and password reset. These endpoints facilitate secure user authentication and authorization processes within the RESTful API."
 		},
 		{
 			"name": "Users",
@@ -1479,20 +1541,170 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"description": "Page number to return the records from"
 								},
 								{
 									"key": "limit",
-									"value": "5"
+									"value": "5",
+									"description": "Limit on the number of records to return\n"
 								},
 								{
 									"key": "sortBy",
-									"value": "createdAt:desc"
+									"value": "createdAt:desc",
+									"description": "Sorting syntax formatted by column:order"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/api/v1/users/?page=1&limit=5&sortBy=createdAt:desc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "createdAt:desc"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Apr 2024 10:06:30 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1713434851"
+								},
+								{
+									"key": "RateLimit-Policy",
+									"value": "10;w=60"
+								},
+								{
+									"key": "RateLimit",
+									"value": "limit=10, remaining=9, reset=60"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Origin-Agent-Cluster",
+									"value": "?1"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"59a-TBwWfBngQfD554xYq6/9eQ0Hdzs\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 5,\n    \"pages\": 1,\n    \"page\": \"1\",\n    \"limit\": \"5\",\n    \"data\": [\n        {\n            \"name\": \"Jubaer Al Noman\",\n            \"username\": \"noman\",\n            \"email\": \"noman900@gmail.com\",\n            \"password\": \"$2a$10$BLvJ2DevpkqKvywnYCuXcuRc4YvUdecRl0jHx.QqbyzpYub2LuJ..\",\n            \"role\": \"user\",\n            \"createdAt\": \"2024-04-03T05:48:41.640Z\",\n            \"updatedAt\": \"2024-04-03T05:48:41.640Z\",\n            \"__v\": 0,\n            \"id\": \"660cedb94bfc836952fa33ee\"\n        },\n        {\n            \"name\": \"Test User 2\",\n            \"username\": \"user2\",\n            \"email\": \"user2@gmail.com\",\n            \"password\": \"$2a$10$24mwbvLGFBWPGxBh1lSoEOXILFa3UQgT1AIus4iuLO4rxO5YX4Xua\",\n            \"role\": \"user\",\n            \"createdAt\": \"2024-02-29T10:31:49.268Z\",\n            \"updatedAt\": \"2024-02-29T10:31:49.268Z\",\n            \"__v\": 0,\n            \"id\": \"65e05d15c86ba9be59760bde\"\n        },\n        {\n            \"name\": \"Test User 1\",\n            \"username\": \"user1\",\n            \"email\": \"user1@gmail.com\",\n            \"password\": \"$2a$10$DQzLJw0KAVsNFA2UYTKjZOOra8D9Sm6XroIiuuXx.LslROiuw1b0S\",\n            \"role\": \"user\",\n            \"createdAt\": \"2024-02-29T10:31:38.360Z\",\n            \"updatedAt\": \"2024-02-29T10:31:38.360Z\",\n            \"__v\": 0,\n            \"id\": \"65e05d0ac86ba9be59760bda\"\n        },\n        {\n            \"name\": \"Rohsin Al Razi\",\n            \"username\": \"razi\",\n            \"email\": \"alrazi900@gmail.com\",\n            \"password\": \"$2a$10$iz57kf2ZpT5uyBvmHtfzJOI7C5NPG0UH3soSj1zValmCJRwkxtMx.\",\n            \"role\": \"user\",\n            \"createdAt\": \"2024-02-06T11:35:04.813Z\",\n            \"updatedAt\": \"2024-04-03T04:53:20.227Z\",\n            \"__v\": 0,\n            \"id\": \"65c219680abf647f49cd5044\"\n        },\n        {\n            \"name\": \"guest 1\",\n            \"username\": \"guest1\",\n            \"email\": \"guest1@gmail.com\",\n            \"password\": \"$2a$10$4PDswcUUByltAbVSiPYdeO/DkIjWEJeg4gs2nClIcMXPB4As1CKzu\",\n            \"role\": \"user\",\n            \"createdAt\": \"2024-02-06T07:56:42.705Z\",\n            \"updatedAt\": \"2024-02-06T07:56:42.705Z\",\n            \"__v\": 0,\n            \"id\": \"65c1e63a9d55329ac0165b7f\"\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get User By ID",
@@ -1511,14 +1723,152 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "65e05d15c86ba9be59760bde"
+									"value": "660cedb94bfc836952fa33ee",
+									"description": "User ID to get"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/api/v1/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "660cedb94bfc836952fa33ee",
+											"description": "User ID to get"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Apr 2024 10:36:08 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1713436629"
+								},
+								{
+									"key": "RateLimit-Policy",
+									"value": "10;w=60"
+								},
+								{
+									"key": "RateLimit",
+									"value": "limit=10, remaining=9, reset=60"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Origin-Agent-Cluster",
+									"value": "?1"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "207"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"cf-QJTlGBzyZNq9qdpaHfwkZ2Rmbq0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"660cedb94bfc836952fa33ee\",\n    \"name\": \"Jubaer Al Noman\",\n    \"username\": \"noman\",\n    \"email\": \"noman900@gmail.com\",\n    \"role\": \"user\",\n    \"createdAt\": \"2024-04-03T05:48:41.640Z\",\n    \"updatedAt\": \"2024-04-03T05:48:41.640Z\",\n    \"__v\": 0\n}"
+						}
+					]
 				}
-			]
+			],
+			"description": "The **Users API Collection** provides endpoints to manage user-related operations within the application."
 		}
 	]
 }
