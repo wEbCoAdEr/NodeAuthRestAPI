@@ -67,7 +67,7 @@ The NodeAuthRestAPI offers a comprehensive set of features designed to support s
 
 - **Pagination and Utility Modules:**
     - Utilizes Mongoose Paginate and Aggregate Paginate plugins for streamlined pagination of database queries.
-    - Implements dedicated utility modules for email handling (with Handlebars template support), AWS S3 integration, and error monitoring using Sentry.
+    - Implements dedicated utility modules for email handling (with Handlebars template support), AwsS3 S3 integration, and error monitoring using Sentry.
 
 
 The NodeAuthRestAPI provides a robust foundation for building secure and feature-rich RESTful APIs, incorporating best practices in authentication, data management, error handling, and middleware implementation. Each feature is carefully designed to enhance security, scalability, and maintainability of the application.
@@ -143,9 +143,11 @@ The NodeAuthRestAPI application lifecycle ensures smooth operation and managemen
 
 The NodeAuthRestAPI project follows a modular and organized structure to facilitate maintainability and scalability. Below is an overview of the directory structure:
 
+### Application Diagram
+
 ![Lifecycle Diagram](Documentation/assets/diagram.png)
 
-<center>Application Diagram</center>
+### Folder Structure
 
 ```plaintext
 source-root/
@@ -197,7 +199,7 @@ source-root/
 │   ├── logger.js
 │   ├── mailer.js
 │   ├── handlebars.js
-│   ├── aws.js
+│   ├── awsS3.js
 │   ├── sentry.js
 │   └── index.js
 │
@@ -216,7 +218,6 @@ source-root/
 ├── config.js
 └── index.js
 ```
-<center>Folder Structure</center>
 
 ### Directory Descriptions:
 
@@ -232,7 +233,7 @@ source-root/
 
 - **services/**: Implements service modules responsible for interacting with the database and executing business logic for authentication, token management, and user operations.
 
-- **utils/**: Includes utility modules for common tasks such as error handling (`ApiError.js`), async error handling (`catchAsync.js`), logging (`logger.js`), email sending (`mailer.js`), template rendering (`handlebars.js`), AWS S3 operations (`aws.js`), and Sentry integration (`sentry.js`).
+- **utils/**: Includes utility modules for common tasks such as error handling (`ApiError.js`), async error handling (`catchAsync.js`), logging (`logger.js`), email sending (`mailer.js`), template rendering (`handlebars.js`), AwsS3 S3 operations (`awsS3.js`), and Sentry integration (`sentry.js`).
 
 - **validators/**: Houses validator modules for request input validation using Joi.
 
