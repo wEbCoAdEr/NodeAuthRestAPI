@@ -1,3 +1,4 @@
+module.exports.catchAsync = require('./catchAsync');
 module.exports.rateLimiter = require('./rateLimiter');
 module.exports.httpLogger = require('./httpLogger');
 module.exports.errorConverter = require('./errorConverter');

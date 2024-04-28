@@ -1,12 +1,12 @@
 //Loads dependency
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
-const {catchAsync, ApiError} = require('../utils');
+const { ApiError } = require('../utils');
 const config = require('../config');
 const {authValidator} = require('../validators');
 const {authService, userService, tokenService} = require('../services');
 const {authHelper, coreHelper} = require('../helpers');
-const {authUser, authToken} = require('../middlewares');
+const {catchAsync, authUser, authToken} = require('../middlewares');
 
 
 /**
