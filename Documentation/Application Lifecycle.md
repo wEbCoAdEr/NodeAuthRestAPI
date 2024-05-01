@@ -24,7 +24,7 @@ The NodeAuthRestAPI follows a well-defined application lifecycle, encompassing v
         - **Compression Middleware:** `compression()` compresses response bodies to optimize data transfer.
 
 2. **Static File Serving and Routing Setup**
-    - Static files (e.g., images, CSS) are served using `express.static()` to serve assets stored in the `public` directory.
+    - Static files (e.g., images, CSS) are served using `express.static()` to serve assets stored in the `public` directory.for Express Applications
     - API routes (`/v1/`) are defined and configured to handle specific endpoint paths using the `router` from the `routes/v1/` directory.
 
 ### Request Handling
