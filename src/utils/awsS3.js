@@ -125,7 +125,6 @@ const listFilesAndFolders = async (bucket, targetPath, nested = true) => {
           Bucket: bucket,
           Key: key,
         };
-
         try {
           const headData = await s3.headObject(headParams).promise();
           return {
@@ -149,7 +148,7 @@ const listFilesAndFolders = async (bucket, targetPath, nested = true) => {
 
   } catch (error) {
     // Throw an ApiError with the internal server error status code and the original error
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
 
