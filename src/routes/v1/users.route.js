@@ -1,4 +1,7 @@
-const { router, userController } = require('../../controllers');
+const express = require("express");
+const { userController } = require('../../controllers');
+
+const router = express.Router();
 
 // Route for user root endpoint
 router

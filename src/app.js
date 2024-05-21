@@ -3,8 +3,9 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
+const httpStatus = require('http-status');
 const config = require('./config');
-const {initializeHandlebars, initializeSentry} = require('./utils');
+const {ApiError, initializeHandlebars, initializeSentry} = require('./utils');
 const {rateLimiter, httpLogger, errorConverter, errorHandler} = require('./middlewares');
 const router = require('./routes/v1');
 
@@ -52,6 +53,11 @@ app.use(config.STATIC_SERVING_ENDPOINT, express.static('public'));
 
 // Define routers
 app.use(config.API_ENPOINT_PREFIX, router);
+
+// Handle not found URLs
+app.use((req, res, next) => {
+  throw new ApiError(httpStatus.NOT_FOUND, 'Requested URL not found');
+});
 
 // Sentry error handler
 app.use(sentry.Handlers.errorHandler());
