@@ -1,4 +1,4 @@
-## Error Handling Middleware for Route Handlers
+## Error Handling Middleware Module Documentation
 
 This document describes the `catchAsync` middleware, a utility function for handling errors in asynchronous Express route handlers.
 
