@@ -7,12 +7,20 @@
 // Import required dependencies
 const winston = require('winston');
 require('winston-daily-rotate-file');
-const {Console, File, DailyRotateFile} = winston.transports;
-const {combine, timestamp, json, errors, colorize, simple, align} = winston.format;
+const { Console, File, DailyRotateFile } = winston.transports;
+const { combine, timestamp, json, errors, colorize, simple, align } = winston.format;
+const { Logtail } = require("@logtail/node");
+const { LogtailTransport } = require("@logtail/winston");
 const config = require("../config");
 
 // Define common transports for both development and production environment
+// (Currently empty - could be used for shared transports like an audit log)
 const commonTransports = [];
+
+// Create a Logtail client with conditional check for environment variable
+const logtail = config.BETTERSTACK_LOG_SOURCE_TOKEN ?
+  new Logtail(config.BETTERSTACK_LOG_SOURCE_TOKEN)
+  : null;
 
 // Define development transports for development environments
 const developmentTransports = [
@@ -33,7 +41,8 @@ const productionTransports = [
     filename: 'application-logs-%DATE%.log',
     maxFiles: config.LOG_ROTATE_INTERVAL, // Maximum number of days or number for the log files to keep
     zippedArchive: true, // Enable compression for rotated log files
-  })
+  }),
+  ...(logtail ? [new LogtailTransport(logtail)] : []) // Include Logtail only if token is provided
 ];
 
 // Define environment transport based on the application environment
@@ -45,7 +54,7 @@ const loggerTransports = [...commonTransports, ...environmentTransport];
 // Create logger instance
 const logger = winston.createLogger({
   level: config.ENV === 'DEVELOPMENT' ? 'debug' : 'http', // Set logging level based on environment
-  format: combine(errors({stack: true}), timestamp(), json()), // Log format including timestamp and JSON format
+  format: combine(errors({ stack: true }), timestamp(), json()), // Log format including timestamp and JSON format
   transports: loggerTransports, // Assign transports based on environment
   exceptionHandlers: [
     new File({
