@@ -1,3 +1,7 @@
+const {Types} = require("mongoose");
+const {BAD_REQUEST} = require("http-status");
+const {ApiError} = require("../utils");
+
 /**
  * Generates a sort query based on the sortBy string.
  * @param {string} sortBy - Sort criteria string (e.g., 'createdAt:desc').
@@ -23,6 +27,33 @@ const generateSortQuery = (sortBy) => {
   return sortList.join(' ');
 }
 
+
+/**
+ * Checks if the given id is a valid ObjectId.
+ *
+ * @param {string} id - The id to be checked.
+ * @return {boolean} Returns true if the id is a valid ObjectId, false otherwise.
+ */
+const isValidObjectId = (id) => {
+  return Types.ObjectId.isValid(id);
+}
+
+
+/**
+ * Checks if the given id is a valid ObjectId and throws an error if not.
+ *
+ * @param {string} id - The id to be checked.
+ * @return {boolean} Returns true if the id is a valid ObjectId, false otherwise.
+ */
+const validateObjectId = (id) => {
+  // Validate the threadId format before making the query
+  if (!isValidObjectId(id)) {
+    throw new ApiError(BAD_REQUEST, 'Invalid object id format');
+  }
+}
+
 module.exports = {
-  generateSortQuery
+  generateSortQuery,
+  isValidObjectId,
+  validateObjectId
 }
