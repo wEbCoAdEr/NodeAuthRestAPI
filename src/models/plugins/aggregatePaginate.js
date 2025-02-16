@@ -33,13 +33,21 @@ const aggregatePaginate = (schema) => {
     const pages = Math.ceil(count / limit);
 
     // Generate sort query
-    const sortQuery = dbHelper.generateSortQuery(sortBy);
+    const sortObject = sortBy ?
+      sortBy.split(',').reduce((sortObj, sortOption) => {
+        const [key, order] = sortOption.split(':');
+        if (order !== 'asc' && order !== 'desc') {
+          throw new Error('Invalid sorting direction');
+        }
+        sortObj[key] = order === 'desc' ? -1 : 1;
+        return sortObj;
+      }, {}) : { createdAt: 1 };
 
     // Modify aggregation pipeline for pagination
     aggregationPipeline.push(
-      { $sort: sortQuery },
+      { $sort: sortObject },
       { $skip: skip },
-      { $limit: limit }
+      { $limit: Number(limit) }
     );
 
     // Execute aggregation pipeline

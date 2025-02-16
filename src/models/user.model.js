@@ -14,10 +14,13 @@ const userSchema = mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
     unique: true
   },
   email: {
+    type: String,
+    unique: true,
+  },
+  contact_number: {
     type: String,
     required: true,
     unique: true
@@ -27,10 +30,23 @@ const userSchema = mongoose.Schema({
     required: true,
     minlength: 8,
   },
+  date_of_birth: {
+    type: Date,
+    required: true,
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    required: true,
+  },
   role: {
     type: String,
-    enum: ['user', 'admin'], // User role can be 'user' or 'admin'
-    default: 'user' // Default role is 'user'
+    enum: ['patient', 'doctor', 'admin'], // User role can be 'patient', 'doctor' or 'admin'
+    default: 'patient' // Default role is 'patient'
+  },
+  verified: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true,
@@ -40,6 +56,7 @@ const userSchema = mongoose.Schema({
     }
   }
 });
+
 
 
 // Hash user password before saving to the database

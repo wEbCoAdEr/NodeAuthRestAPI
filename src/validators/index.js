@@ -19,6 +19,7 @@ const validateSchema = (schema, req, res, next) => {
   next();
 }
 
+
 // Export validator components
 module.exports.validateSchema = validateSchema;
 module.exports.authValidator = require('./auth.validator');

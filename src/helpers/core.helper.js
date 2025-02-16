@@ -35,7 +35,23 @@ const hashString = (string) => {
   return bcrypt.hashSync(string, salt);
 }
 
+/**
+ * Removes null properties from an object.
+ *
+ * @param {object} obj - The object to remove null properties from.
+ * @return {object} The object with null properties removed.
+ */
+function removeNullProperties(obj) {
+  for (const prop in obj) {
+    if (obj[prop] === null) {
+      delete obj[prop];
+    }
+  }
+  return obj;
+}
+
 module.exports = {
   pick,
-  hashString
+  hashString,
+  removeNullProperties
 }

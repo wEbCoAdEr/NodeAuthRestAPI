@@ -7,6 +7,7 @@ const {authValidator} = require('../validators');
 const {authService, userService, tokenService} = require('../services');
 const {authHelper, coreHelper} = require('../helpers');
 const {catchAsync, authUser, authToken} = require('../middlewares');
+const {validateDataRef} = require(`../validators/auth.validator`);
 
 
 /**
@@ -22,31 +23,14 @@ const {catchAsync, authUser, authToken} = require('../middlewares');
  */
 const register = [
   authValidator.validateRegister,
+  authValidator.validateDuplicateUser,
   catchAsync(async (req, res) => {
-
-    const {email, username} = req.body;
-
-    const isEmailDuplicate = await userService.checkRecord({email});
-    const isUsernameDuplicate = await userService.checkRecord({username});
-
-    if (isEmailDuplicate) {
-      return res.status(httpStatus.BAD_REQUEST).json({
-        message: "The emails that you have entered is already exists"
-      });
-    }
-
-    if (isUsernameDuplicate) {
-      return res.status(httpStatus.BAD_REQUEST).json({
-        message: "The username that you have entered is already exists"
-      });
-    }
 
     const user = await userService.createUser(req.body);
     const userObject = user.toObject();
     delete userObject.password;
 
     return res.status(httpStatus.CREATED).json(userObject);
-
   })
 ];
 
@@ -65,8 +49,8 @@ const register = [
 const login = [
   authValidator.validateLogin,
   catchAsync(async (req, res) => {
-    const {username, password} = req.body;
-    const loginData = await authService.login(username, password, req.ip);
+    const {login, password} = req.body;
+    const loginData = await authService.login(login, password, req.ip);
     return res.json(loginData);
   })
 ];
@@ -158,8 +142,8 @@ const logout = [
 
     jwt.verify(refreshToken, config.REFRESH_TOKEN_SECRET, async (error, tokenObject) => {
 
-      const tokenUserId = tokenObject.userId;
-      const authUserId = req.userId;
+      const tokenUserId = tokenObject.user_id;
+      const authUserId = req.user_id;
 
       //Send forbidden status if token verification fails
       if (error || (tokenUserId !== authUserId)) {
@@ -183,6 +167,44 @@ const logout = [
   })
 ];
 
+/**
+ * Password change API handler.
+ *
+ * This method handles the password change process for a user.
+ * It validates the old password, checks if the new password matches the confirm password,
+ * updates the user's password, and returns a success message.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @returns {Response} The HTTP response containing a success message or an error message.
+ */
+const changePassword = [
+  authUser(),
+  authValidator.validatePasswordChange,
+  catchAsync(async (req, res) => {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.userId;
+
+    // Verify the old password
+    const user = await userService.getUserById(userId);
+    const isValidPassword = await authService.verifyPassword(user, oldPassword);
+    if (!isValidPassword) {
+      return res.status(httpStatus.BAD_REQUEST).json({ message: 'Old password is incorrect' });
+    }
+
+    // Check if new password matches confirm password
+    if (newPassword !== confirmPassword) {
+      return res.status(httpStatus.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
+    }
+
+    // Update the password
+    await userService.updatePassword(userId, newPassword);
+
+    // Return success message
+    return res.status(httpStatus.OK).json({ message: 'Password changed successfully' });
+  })
+];
+
 
 /**
  * Handles the request to reset the password for a user.
@@ -195,26 +217,37 @@ const logout = [
  * @param {Response} res - The HTTP response object.
  * @returns {Response} The HTTP response indicating the success or failure of the password reset request.
  */
+
 const requestPasswordReset = catchAsync(async (req, res) => {
   // Extract email from request body
-  const {email} = req.body;
+  const {reference} = req.body;
 
-  // Find user data based on the provided email
-  let userData = await userService.getUser({email});
+  const validation = validateDataRef({reference});
+  //res.json({validation})
 
+  // If reference is not valid, return error response
+
+  if (!validation.isValid) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: validation.message });
+  }
+
+
+  // Get user data based on the reference value
+  const userData = await userService.getUser({ [validation.type === 'email address' ? 'email' : 'contact_number']: reference });
+  //res.json({ userData });
   // If user data not found, return 404 response
   if (!userData) {
     return res.status(httpStatus.NOT_FOUND).json({
-      message: "Your provided email address could not be found"
+      message: `Your provided ${validation.type} could not be found`
     });
   }
 
   // Convert user data to plain object and add IP address
-  userData = userData.toObject();
+  //userData = userData.toObject();
   userData.ip = req.ip;
-
+  //res.json(validation.type );
   // Request password reset for the user
-  const response = await authService.requestPasswordReset(userData);
+  const response = await authService.requestPasswordReset(userData,validation.type);
 
   // If password reset request fails, throw internal server error
   if (!response) {
@@ -226,13 +259,13 @@ const requestPasswordReset = catchAsync(async (req, res) => {
 
   // Return successful response with accepted status
   return res.status(httpStatus.ACCEPTED).json({
-    message: 'Password reset request initiated successfully! Please check your email for the verification code.'
+    message: `Password reset request initiated successfully! Please check your ${validation.type} for the verification code.`
   });
 });
 
 
 /**
- * Get Password Reset Token API handler.
+ * Get Password VerificationToken Reset Token API handler.
  *
  * This method handles the request to retrieve the password reset token
  * based on the provided verification code. It fetches the reset token data
@@ -251,8 +284,11 @@ const getPasswordResetToken = catchAsync(async (req, res) => {
   const {verificationCode} = req.params;
 
   // Fetch reset token data using the verification code
-  const tokenData = await tokenService.getPasswordResetToken({verificationCode});
-
+  const tokenData = await tokenService.getVerificationToken({
+    verificationCode,
+    type: 'passwordReset'
+  });
+//return res.json({tokenData})
   // If token data not found, return 400 response
   if (!tokenData) {
     return res.status(httpStatus.BAD_REQUEST).json({
@@ -263,7 +299,8 @@ const getPasswordResetToken = catchAsync(async (req, res) => {
   const {token} = tokenData;
 
   // Verify password reset token
-  const tokenVerified = await tokenService.verifyToken(token, 'passwordResetToken');
+  const tokenVerified = await tokenService.verifyToken(token, 'passwordReset');
+
 
   // If token verification fails, return 401 response
   if (!tokenVerified) {
@@ -313,7 +350,6 @@ const processPasswordReset = [
   })
 ];
 
-
 module.exports = {
   register,
   login,
@@ -321,5 +357,6 @@ module.exports = {
   logout,
   requestPasswordReset,
   getPasswordResetToken,
-  processPasswordReset
+  processPasswordReset,
+  changePassword
 }

@@ -34,7 +34,11 @@ app.use(httpLogger);
 app.use(helmet());
 
 // Apply Cross-Origin Resource Sharing (CORS) middleware
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
+  credentials: true, // Allow credentials
+}));
 
 // Parse JSON request body
 app.use(express.json());
@@ -46,7 +50,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(compression());
 
 // Handle root endpoint request
-app.get('/', (req, res) => res.render('home'));
+//app.get('/', (req, res) => res.render('home'));
 
 // Serve static files from the "public" directory
 app.use(config.STATIC_SERVING_ENDPOINT, express.static('public'));

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const crypto = require('crypto');
 const config = require('../config');
-const {RefreshToken, PasswordResetToken} = require('../models');
+const {RefreshToken, VerificationToken} = require('../models');
 const httpStatus = require("http-status");
 
 
@@ -41,6 +41,10 @@ const getTokenConfig = (type) => {
     case 'accessToken':
       secret = config.ACCESS_TOKEN_SECRET;
       expires = config.ACCESS_TOKEN_EXPIRATION;
+      break;
+    case 'accountVerificationToken':
+      secret = config.ACCOUNT_VERIFICATION_TOKEN_SECRET;
+      expires = config.ACCOUNT_VERIFICATION_TOKEN_EXPIRATION;
       break;
     default:
       secret = config.PASSWORD_RESET_TOKEN_SECRET;
@@ -81,7 +85,6 @@ const generateToken = (tokenData, type = 'accessToken') => {
  *                              otherwise returns false.
  */
 const verifyToken = async (token, type) => {
-
   // Get the secret key for the token type
   const {secret} = getTokenConfig(type);
 
@@ -153,8 +156,8 @@ const generateVerificationCode = () => {
  * @param {Object} query - The query object used to search for the password reset token.
  * @return {Promise<Object>} A promise that resolves to the password reset token.
  */
-const getPasswordResetToken = async (query) => {
-  return PasswordResetToken.findOne(query);
+const getVerificationToken = async (query) => {
+  return VerificationToken.findOne(query);
 }
 
 
@@ -164,5 +167,5 @@ module.exports = {
   verifyToken,
   generateAuthToken,
   generateVerificationCode,
-  getPasswordResetToken
+  getVerificationToken
 };

@@ -24,6 +24,6 @@ router.get('/reset-password/:verificationCode', authController.getPasswordResetT
 
 // Route for processing password reset
 router.put('/reset-password', authController.processPasswordReset);
-
+router.put('/change-password', authController.changePassword);
 
 module.exports = router;

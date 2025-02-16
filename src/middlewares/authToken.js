@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { authHelper } = require('../helpers');
 const { tokenService } = require('../services');
 
+
 /**
  * Authentication middleware for Express routes that require a valid token.
  *
@@ -47,7 +48,7 @@ const authToken = (tokenType = 'passwordResetToken', callback = null) => async (
   }
 
   // 6. Attach the decoded token object to the request object for further use in the route handler (optional)
-  req.tokenObject = tokenObject;  // Example usage, adjust based on your needs
+  req.tokenObject = tokenObject;
 
   // 7. Continue processing the request in the next middleware
   next();
